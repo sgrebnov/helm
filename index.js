@@ -155,6 +155,7 @@ async function run() {
 
     const track = getInput("track") || "stable";
     const appName = getInput("release", required);
+    const imageTag = getInput("image.tag");
     const release = releaseName(appName, track);
     const namespace = getInput("namespace", required);
     const chart = chartName(getInput("chart", required));
@@ -171,6 +172,7 @@ async function run() {
     core.debug(`param: track = "${track}"`);
     core.debug(`param: release = "${release}"`);
     core.debug(`param: appName = "${appName}"`);
+    core.debug(`param: imageTag = "${imageTag}"`);
     core.debug(`param: namespace = "${namespace}"`);
     core.debug(`param: chart = "${chart}"`);
     core.debug(`param: values = "${values}"`);
@@ -196,6 +198,7 @@ async function run() {
     ];
     if (dryRun) args.push("--dry-run");
     if (appName) args.push(`--set=app.name=${appName}`);
+    if (imageTag) args.push(`--set=image.tag=${imageTag}`);
     if (version) args.push(`--set=app.version=${version}`);
     valueFiles.forEach(f => args.push(`--values=${f}`));
     args.push("--values=./values.yml");
@@ -224,7 +227,8 @@ async function run() {
 
     // Remove the canary deployment before continuing.
     if (removeCanary) {
-      core.debug(`removing canary ${appName}-canary`);
+      core.debug(`removing canary ${
+                 }-canary`);
       await exec.exec(helm, deleteCmd(helm, namespace, `${appName}-canary`), {
         ...opts,
         ignoreReturnCode: true
