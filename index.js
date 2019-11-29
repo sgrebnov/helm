@@ -227,8 +227,7 @@ async function run() {
 
     // Remove the canary deployment before continuing.
     if (removeCanary) {
-      core.debug(`removing canary ${
-                 }-canary`);
+      core.debug(`removing canary ${appName}-canary`);
       await exec.exec(helm, deleteCmd(helm, namespace, `${appName}-canary`), {
         ...opts,
         ignoreReturnCode: true
